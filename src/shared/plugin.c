@@ -128,7 +128,7 @@ void
 rc_plugin_run(RC_HOOK hook, const char *value)
 {
 	PLUGIN *plugin;
-	struct sigaction sa;
+	struct sigaction sa = {0};
 	sigset_t empty;
 	sigset_t full;
 	sigset_t old;
@@ -147,7 +147,6 @@ rc_plugin_run(RC_HOOK hook, const char *value)
 		return;
 
 	/* We need to block signals until we have forked */
-	memset(&sa, 0, sizeof(sa));
 	sa.sa_handler = SIG_DFL;
 	sigemptyset(&sa.sa_mask);
 	sigemptyset(&empty);
@@ -203,7 +202,7 @@ rc_plugin_run(RC_HOOK hook, const char *value)
 
 		sigprocmask(SIG_SETMASK, &old, NULL);
 		close(pfd[1]);
-		buffer = xmalloc(sizeof(char) * BUFSIZ);
+		buffer = xmalloc(BUFSIZ);
 		memset(buffer, 0, BUFSIZ);
 
 		while ((nr = read(pfd[0], buffer, BUFSIZ)) > 0) {
