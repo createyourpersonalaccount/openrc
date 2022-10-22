@@ -48,7 +48,7 @@ typedef struct plugin
 } PLUGIN;
 TAILQ_HEAD(, plugin) plugins;
 
-#ifndef __FreeBSD__
+#if !defined(__FreeBSD__) && !defined(__DragonFly__)
 dlfunc_t
 dlfunc(void * __restrict handle, const char * __restrict symbol)
 {
